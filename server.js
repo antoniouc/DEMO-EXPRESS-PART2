@@ -3,7 +3,8 @@ const app = express();
 const session = require('express-session');
 const path = require('path');
 const productosController = require('./controllers/productos');
-
+const userController = require('./controllers/usuarios');
+let usuarioLogueado = false;
 // Configurar middleware para manejar sesiones
 app.use(session({
   secret: 'secreto', // Clave secreta para firmar la cookie de sesión
@@ -11,8 +12,11 @@ app.use(session({
   saveUninitialized: true
 }));
 
+app.use(express.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
   res.locals.carrito = req.session.carrito || [];
+  res.locals.usuarioLogueado = usuarioLogueado;
   next();
 });
 
@@ -26,8 +30,36 @@ app.use(express.json());
 
 // Ruta para la página de inicio
 app.get('/', (req, res) => {
+    
     res.render('index', { title: 'Página de Bienvenida' });
 }); 
+
+
+  app.get('/login', (req, res) => {
+    res.render('login', { title: 'Hola, Te Extrañamos' });
+});
+
+app.get('/logout', (req, res) => {
+    // Aquí puedes realizar cualquier limpieza necesaria relacionada con la sesión
+    // Por ejemplo, puedes destruir la sesión del usuario
+    usuarioLogueado = false;
+    res.redirect('/');
+  });
+app.post('/loginvalidacion', (req, res) => {
+    const { email, password } = req.body;
+
+    // Verificar las credenciales del usuario utilizando la función validarUsuario
+    const usuarioValido = userController.validarUsuario(email, password);
+
+    if (usuarioValido) {
+        // Las credenciales son válidas, redireccionar a la página principal o realizar otra acción
+        usuarioLogueado = true;
+        res.redirect('/');
+    } else {
+        // Las credenciales no son válidas, mostrar un mensaje de error o redireccionar a la página de inicio de sesión nuevamente
+        res.send('Correo electrónico o contraseña incorrectos');
+    }
+});
 
 // Ruta para el catálogo de productos
 app.get('/catalogo', (req, res) => {
@@ -52,6 +84,7 @@ app.get('/producto/:id', (req, res) => {
     const producto = productosController.getProductoPorId(idProducto);
     res.render('producto', { title: 'Detalle del Producto', producto });
 });
+
 
 // Ruta para el carrito de compra
 app.get('/carrito', (req, res) => {
@@ -96,7 +129,6 @@ app.post('/actualizar-cantidad/:id/:cantidad', (req, res) => {
         const cantidadNueva = item.cantidad + cantidad;
         if (cantidadNueva > 0 && cantidad <= producto.cantidad) {
             item.cantidad = cantidadNueva;
-            item.precio = item.cantidad * producto.precio;
             producto.cantidad -= cantidad;
             if (item.cantidad === 0) {
                 carrito = carrito.filter(item => item.id !== idProducto);

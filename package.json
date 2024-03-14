@@ -4,20 +4,19 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "sass": "sass styles/sass/styles.sass:public/css/styles.css",
-    "sass-watch": "sass --watch styles/sass/styles.sass:public/css/styles.css",
-    "start": "npm run sass && nodemon server.js"
+    "sass": "node styles/sass/styles.sass:public/css/styles.css",
+    "sass-watch": "node-sass --watch styles/sass/styles.sass:public/css/styles.css",
+    "start": "npm run sass && nodenom server.js"
   },
   "keywords": [],
-  "author": "Joshua Gonzalez",
+  "author": "Antonio Uc",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.3",
     "express-session": "^1.18.0",
+    "node-sass": "^9.0.0",
     "pug": "^3.0.2",
-    "sass": "^1.71.1"
-  },
-  "devDependencies": {
+    "sass": "^1.72.0",
     "nodemon": "^3.1.0"
   }
 }

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  div.content
+    div.welcome #{title}
+    form(action='/loginvalidacion', method='POST')
+      div.input-fields
+        input(type='email', placeholder='Email', class='input-line full-width', name='email')
+        input(type='password', placeholder='Password', class='input-line full-width', name='password')
+
+      div
+        button.ghost-round.full-width(type='submit') Iniciar Sesión

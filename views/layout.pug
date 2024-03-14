@@ -11,8 +11,17 @@ html
           a(href='/') Inicio
         li
           a(href='/catalogo') Catálogo de Productos
-        li
-          a(href='/carrito') Carrito de Compra (#{carrito.length})
+        if usuarioLogueado
+         li
+           a(href='/carrito') Carrito de Compra (#{carrito.length})
+        if  !usuarioLogueado
+         li 
+           a(href='/login') INICIAR  SESION
+        else
+         li
+           a(href='/logout') CERRAR SESIÓN
 
     .container
       block content
+  script(type="module", src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js") 
+  script(src="https://unpkg .com/ionicons@7.1.0/dist/ionicons/ionicons.js") 

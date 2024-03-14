@@ -11,7 +11,9 @@ block content
           p= producto.descripcion
           p Disponible: #{producto.cantidad}
           p Precio: #{producto.precio}
+          if usuarioLogueado
           form(action=`/agregar-al-carrito/${producto.id}`, method='POST')
-            button(type='submit') Agregar al carrito
+            button(type='submit' disabled=!usuarioLogueado) Agregar al carrito
+             ion-icon(name='cart-outline')
   else
     p No se encontraron resultados.
